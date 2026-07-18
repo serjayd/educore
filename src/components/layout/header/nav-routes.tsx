@@ -10,10 +10,6 @@ export const NAV_LINKS = [
     href: "#categories",
   },
   {
-    label: "Teach",
-    href: "/teach",
-  },
-  {
     label: "Pricing",
     href: "#pricing",
   },

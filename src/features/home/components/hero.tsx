@@ -89,7 +89,7 @@ export default function Hero() {
               width={1280}
               height={1024}
               priority
-              className="h-auto w-full max-w-xl rounded-2xl object-cover shadow-2xl"
+              className="h-auto w-full rounded-2xl object-cover shadow-2xl"
             />
           </div>
         </div>

@@ -7,8 +7,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import NavRoutes from "./nav-routes";
 import HeaderCTA from "./header-cta";
+import { IUserSession } from "@/types/user";
 
-export default function HeaderMobile() {
+interface HeaderCTAProps {
+  session: IUserSession | null;
+}
+
+export default function HeaderMobile({ session }: HeaderCTAProps) {
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 border-b border-border bg-background z-50">
       <Container>
@@ -24,7 +29,7 @@ export default function HeaderMobile() {
             <SheetContent side="right">
               <div className="h-full mt-12 flex flex-col gap-8 p-4">
                 <NavRoutes />
-                <HeaderCTA />
+                <HeaderCTA session={session} />
               </div>
             </SheetContent>
           </Sheet>
