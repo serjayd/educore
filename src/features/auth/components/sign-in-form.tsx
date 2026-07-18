@@ -45,7 +45,7 @@ export default function SignInForm() {
 
     toast.success("Successfully signed in!");
 
-    router.push("/dashboard");
+    router.push("/");
     router.refresh();
   };
 
