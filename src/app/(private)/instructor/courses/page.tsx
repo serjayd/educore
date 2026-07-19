@@ -1,10 +1,23 @@
 import Container from "@/components/shared/container";
 import PageHeading from "@/components/shared/page-heading";
 import { Button } from "@/components/ui/button";
+import CoursesList from "@/features/instructor/courses/components/courses-list";
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
-export default function InstructorCoursesPage() {
+export default async function InstructorCoursesPage() {
+  const session = await getSession();
+
+  if (!session || !session.user) return null;
+
+  const courses = await prisma.course.findMany({
+    where: {
+      authorId: session.user.id,
+    },
+  });
+
   return (
     <section>
       <Container>
@@ -22,6 +35,7 @@ export default function InstructorCoursesPage() {
             </Link>
           </Button>
         </div>
+        <CoursesList courses={courses} />
       </Container>
     </section>
   );

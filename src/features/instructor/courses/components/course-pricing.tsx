@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { courseDetailsSchema } from "../schemas";
 import { z } from "zod";
 import { useCreateCourseStore } from "../store";
+import { PoundSterling } from "lucide-react";
 
 interface CoursePricingProps {
   onNext: () => void;
@@ -51,14 +52,19 @@ export default function CoursePricing({ onNext, onBack }: CoursePricingProps) {
       <Field>
         <FieldLabel htmlFor="price">Course Price</FieldLabel>
 
-        <Input
-          id="price"
-          type="number"
-          placeholder="49.99"
-          {...register("price", {
-            valueAsNumber: true,
-          })}
-        />
+        <div className="relative">
+          <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+          <Input
+            id="price"
+            type="number"
+            placeholder="49.99"
+            className="pl-9"
+            {...register("price", {
+              valueAsNumber: true,
+            })}
+          />
+        </div>
 
         {errors.price && (
           <p className="text-sm text-red-500">{errors.price.message}</p>

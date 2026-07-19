@@ -2,36 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
-
-type CreateCourseInput = {
-  title: string;
-  price: number;
-  description?: string;
-
-  category:
-    | "WEB_DEVELOPMENT"
-    | "MOBILE_DEVELOPMENT"
-    | "BACKEND_ENGINEERING"
-    | "DATA_SCIENCE"
-    | "CYBERSECURITY"
-    | "DEVOPS"
-    | "GAME_DEVELOPMENT"
-    | "DESIGN";
-
-  level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-
-  status: "DRAFT" | "PUBLISHED";
-
-  curriculum: {
-    sections: {
-      title: string;
-      lessons: {
-        title: string;
-        type: "VIDEO" | "ARTICLE";
-      }[];
-    }[];
-  };
-};
+import { CreateCourseInput } from "@/types/course";
+import { revalidatePath } from "next/cache";
 
 export async function createCourse(data: CreateCourseInput) {
   const session = await requireSession();
@@ -84,4 +56,109 @@ export async function createCourse(data: CreateCourseInput) {
   });
 
   return course;
+}
+
+export async function archiveCourse(courseId: string) {
+  try {
+    const course = await prisma.course.update({
+      where: {
+        id: courseId,
+      },
+      data: {
+        status: "ARCHIVED",
+      },
+    });
+
+    revalidatePath("/instructor/courses");
+
+    return {
+      success: true,
+      course,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Failed to archive course",
+    };
+  }
+}
+
+export async function restoreCourse(courseId: string) {
+  try {
+    const course = await prisma.course.update({
+      where: {
+        id: courseId,
+      },
+      data: {
+        status: "DRAFT",
+      },
+    });
+
+    revalidatePath("/instructor/courses");
+
+    return {
+      success: true,
+      course,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Failed to publish course",
+    };
+  }
+}
+
+export async function publishCourse(courseId: string) {
+  try {
+    const course = await prisma.course.update({
+      where: {
+        id: courseId,
+      },
+      data: {
+        status: "PUBLISHED",
+      },
+    });
+
+    revalidatePath("/instructor/courses");
+
+    return {
+      success: true,
+      course,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Failed to publish course",
+    };
+  }
+}
+
+export async function deleteCourse(courseId: string) {
+  try {
+    const course = await prisma.course.delete({
+      where: {
+        id: courseId,
+      },
+    });
+
+    revalidatePath("/instructor/courses");
+
+    return {
+      success: true,
+      course,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Failed to publish course",
+    };
+  }
 }

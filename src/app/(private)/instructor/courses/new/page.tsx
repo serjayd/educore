@@ -11,6 +11,9 @@ import CoursePricing from "@/features/instructor/courses/components/course-prici
 import CourseReview from "@/features/instructor/courses/components/course-review";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Undo2 } from "lucide-react";
+import Link from "next/link";
 
 export default function NewCoursesPage() {
   const [step, setStep] = useState(0);
@@ -45,12 +48,20 @@ export default function NewCoursesPage() {
   return (
     <section>
       <Container className="max-w-5xl">
-        <PageHeading title="Create a course" />
+        <div className="flex items-center gap-2">
+          <Button size="icon-lg" variant="secondary" asChild>
+            <Link href="/instructor/courses">
+              <Undo2 />
+            </Link>
+          </Button>
+          <PageHeading title="Create a course" />
+        </div>
 
-        <div className="my-8 flex border-b">
+        <div className="hidden my-8 md:flex border-b">
           {steps.map((item, index) => (
             <button
               key={item.label}
+              onClick={() => setStep(index)}
               className={cn(
                 "border-b-2 px-4 py-3 text-sm font-medium w-full",
 
@@ -64,7 +75,7 @@ export default function NewCoursesPage() {
           ))}
         </div>
 
-        <div className="mb-8">{steps[step].component}</div>
+        <div className="mt-4 md:mt-0">{steps[step].component}</div>
       </Container>
     </section>
   );

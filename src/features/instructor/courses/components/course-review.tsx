@@ -74,12 +74,12 @@ export default function CourseReview({ onBack }: CourseReviewProps) {
         </p>
       </div>
 
-      <div className="flex justify-between pt-6">
+      <div className="flex flex-col md:flex-row gap-2 justify-between pt-6">
         <Button type="button" variant="outline" onClick={onBack}>
           Back
         </Button>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col md:flex-row gap-2 ">
           <Button variant="outline" onClick={() => handleSave("DRAFT")}>
             Save as Draft
           </Button>
