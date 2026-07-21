@@ -13,7 +13,7 @@ export default async function PublicLayout({ children }: PublicLayoutProps) {
     <>
       <Header session={session} />
       <HeaderMobile session={session} />
-      <main>{children}</main>
+      <main className="mt-16">{children}</main>
     </>
   );
 }

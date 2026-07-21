@@ -70,7 +70,7 @@ export default function CourseDetails({ onNext }: CourseDetailsProps) {
         )}
       </Field>
       <Field>
-        <FieldLabel htmlFor="description">Description</FieldLabel>
+        <FieldLabel htmlFor="description">Description (optional)</FieldLabel>
         <Textarea
           id="description"
           placeholder="What will students learn?"
@@ -82,8 +82,15 @@ export default function CourseDetails({ onNext }: CourseDetailsProps) {
         )}
       </Field>
       <Field>
-        <FieldLabel htmlFor="banner">Banner</FieldLabel>
-        <Input id="banner" type="file" {...register("banner")} />
+        <FieldLabel htmlFor="banner">Banner (optional)</FieldLabel>
+        <Input
+          id="banner"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            setValue("banner", e.target.files?.[0]);
+          }}
+        />
       </Field>
       <div className="grid md:grid-cols-2 gap-4">
         <Field>

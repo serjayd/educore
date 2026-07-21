@@ -59,11 +59,10 @@ export default function NewCoursesPage() {
 
         <div className="hidden my-8 md:flex border-b">
           {steps.map((item, index) => (
-            <button
+            <span
               key={item.label}
-              onClick={() => setStep(index)}
               className={cn(
-                "border-b-2 px-4 py-3 text-sm font-medium w-full",
+                "border-b-2 px-4 py-3 text-sm font-medium w-full text-center block select-none",
 
                 step === index
                   ? "border-primary text-primary"
@@ -71,7 +70,7 @@ export default function NewCoursesPage() {
               )}
             >
               {item.label}
-            </button>
+            </span>
           ))}
         </div>
 

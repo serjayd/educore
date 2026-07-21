@@ -7,6 +7,7 @@ import { createCourse } from "../actions";
 import { toast } from "sonner";
 import { publishCourseSchema } from "../schemas";
 import { useRouter } from "next/navigation";
+import { uploadBanner } from "@/lib/upload-banner";
 
 interface CourseReviewProps {
   onBack: () => void;
@@ -23,38 +24,75 @@ export default function CourseReview({ onBack }: CourseReviewProps) {
   const router = useRouter();
 
   const handleSave = async (status: "DRAFT" | "PUBLISHED") => {
+    // Validate only when publishing
     if (status === "PUBLISHED") {
       const result = publishCourseSchema.safeParse({
-        ...details,
+        title: details.title,
+
+        description: details.description,
+
+        category: details.category,
+
+        level: details.level,
+
+        price: details.price,
+
         curriculum,
       });
 
       if (!result.success) {
         toast.error(result.error.issues[0].message);
+
         return;
       }
     }
 
-    const course = await createCourse({
-      ...details,
-      curriculum,
-      status,
-    });
+    try {
+      let bannerUrl: string | undefined = undefined;
 
-    if (!course) {
-      toast.error("Something went wrong");
-      return;
+      // Upload banner if user selected image
+      if (details.banner) {
+        bannerUrl = await uploadBanner(details.banner);
+      }
+
+      const course = await createCourse({
+        title: details.title,
+
+        description: details.description,
+
+        category: details.category,
+
+        level: details.level,
+
+        price: details.price,
+
+        banner: bannerUrl,
+
+        curriculum,
+
+        status,
+      });
+
+      if (!course) {
+        toast.error("Something went wrong");
+
+        return;
+      }
+
+      resetCourse();
+
+      if (status === "PUBLISHED") {
+        toast.success("Course has been published");
+      } else {
+        toast.success("Course has been saved as draft");
+      }
+
+      router.push("/instructor/courses");
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to create course");
     }
-
-    resetCourse();
-
-    if (status === "PUBLISHED") {
-      toast.success("Course has been published");
-    } else {
-      toast.success("Course has been saved as draft");
-    }
-
-    router.push("/instructor/courses");
   };
 
   return (

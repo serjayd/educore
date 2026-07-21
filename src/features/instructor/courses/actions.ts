@@ -13,10 +13,15 @@ export async function createCourse(data: CreateCourseInput) {
   const course = await prisma.course.create({
     data: {
       title: data.title,
+
       description: data.description,
+
       price: data.price,
 
+      banner: data.banner,
+
       category: data.category,
+
       level: data.level,
 
       status: data.status,
@@ -38,6 +43,12 @@ export async function createCourse(data: CreateCourseInput) {
               title: lesson.title,
 
               type: lesson.type,
+
+              videoUrl: lesson.videoUrl,
+
+              content: lesson.content,
+
+              description: lesson.description,
 
               position: lessonIndex + 1,
             })),
@@ -107,7 +118,7 @@ export async function restoreCourse(courseId: string) {
 
     return {
       success: false,
-      message: "Failed to publish course",
+      message: "Failed to restore course",
     };
   }
 }
@@ -158,7 +169,7 @@ export async function deleteCourse(courseId: string) {
 
     return {
       success: false,
-      message: "Failed to publish course",
+      message: "Failed to delete course",
     };
   }
 }

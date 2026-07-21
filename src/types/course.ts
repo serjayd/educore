@@ -24,6 +24,7 @@ export type CreateCourseInput = {
   title: string;
   price: number;
   description?: string;
+  banner?: string;
 
   category:
     | "WEB_DEVELOPMENT"
@@ -44,8 +45,24 @@ export type CreateCourseInput = {
       title: string;
       lessons: {
         title: string;
+        videoUrl?: string;
+        content?: string;
+        description?: string;
         type: "VIDEO" | "ARTICLE";
       }[];
     }[];
+  };
+};
+
+export type TCourseWithDetails = TCourse & {
+  author: {
+    id: string;
+    name: string;
+    image: string | null;
+  };
+
+  _count: {
+    enrollments: number;
+    reviews: number;
   };
 };

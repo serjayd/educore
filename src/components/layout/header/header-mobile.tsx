@@ -1,5 +1,3 @@
-"use client";
-
 import Container from "@/components/shared/container";
 import Logo from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";

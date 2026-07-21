@@ -6,6 +6,9 @@ import { useCreateCourseStore } from "../store";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { LessonTypeLabel } from "../constants";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 type Props = {
   onNext: () => void;
@@ -25,6 +28,7 @@ export default function CourseCurriculum({ onNext, onBack }: Props) {
   } = useCreateCourseStore();
 
   const [openSectionId, setOpenSectionId] = useState<string | null>(null);
+  const [openLessonId, setOpenLessonId] = useState<string | null>(null);
 
   return (
     <form
@@ -82,36 +86,115 @@ export default function CourseCurriculum({ onNext, onBack }: Props) {
                 ) : (
                   <div className="space-y-2">
                     {s.lessons.map((l) => (
-                      <div
-                        key={l.id}
-                        className="flex items-center justify-between rounded-lg border gap-4 p-4"
-                      >
-                        <div>
-                          {l.type === "VIDEO" ? (
-                            <Video className="size-4 text-primary" />
-                          ) : (
-                            <FileText className="size-4 text-primary" />
+                      <div key={l.id} className="flex flex-col">
+                        <div
+                          className={cn(
+                            "flex items-center justify-between rounded-lg border gap-4 p-4",
+                            openLessonId && "rounded-bl-none rounded-br-none",
                           )}
-                        </div>
-                        <Input
-                          className="flex-1"
-                          type="text"
-                          value={l.title}
-                          onChange={(e) =>
-                            updateLesson(s.id, l.id, e.target.value)
-                          }
-                        />
-                        <p className="text-xs font-medium whitespace-nowrap">
-                          {LessonTypeLabel[l.type]}
-                        </p>
-                        <Button
-                          size="icon"
-                          type="button"
-                          variant="destructive"
-                          onClick={() => removeLesson(s.id, l.id)}
                         >
-                          <Trash2 />
-                        </Button>
+                          <div>
+                            {l.type === "VIDEO" ? (
+                              <Video className="size-4 text-primary" />
+                            ) : (
+                              <FileText className="size-4 text-primary" />
+                            )}
+                          </div>
+                          <Input
+                            className="flex-1"
+                            type="text"
+                            value={l.title}
+                            onChange={(e) =>
+                              updateLesson(s.id, l.id, {
+                                title: e.target.value,
+                              })
+                            }
+                          />
+                          <p className="text-xs font-medium whitespace-nowrap">
+                            {LessonTypeLabel[l.type]}
+                          </p>
+                          <Button
+                            size="xs"
+                            type="button"
+                            variant="secondary"
+                            onClick={() =>
+                              setOpenLessonId((prev) =>
+                                prev === l.id ? null : l.id,
+                              )
+                            }
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="icon"
+                            type="button"
+                            variant="destructive"
+                            onClick={() => removeLesson(s.id, l.id)}
+                          >
+                            <Trash2 />
+                          </Button>
+                        </div>
+                        {openLessonId === l.id && (
+                          <div className="border border-t-0 rounded-b-lg p-4 space-y-4">
+                            {l.type === "VIDEO" && (
+                              <Field className="space-y-2">
+                                <FieldLabel htmlFor="videoUrl">
+                                  Video URL (optional)
+                                </FieldLabel>
+
+                                <Input
+                                  id="videoUrl"
+                                  type="text"
+                                  placeholder="https://youtube.com/watch?v=..."
+                                  value={l.videoUrl ?? ""}
+                                  onChange={(e) =>
+                                    updateLesson(s.id, l.id, {
+                                      videoUrl: e.target.value,
+                                    })
+                                  }
+                                />
+                              </Field>
+                            )}
+
+                            {l.type === "ARTICLE" && (
+                              <Field className="space-y-2">
+                                <FieldLabel htmlFor="content">
+                                  Article Content (optional)
+                                </FieldLabel>
+
+                                <Textarea
+                                  id="content"
+                                  className="w-full min-h-40 rounded-md border border-border bg-background p-3 text-sm resize-none"
+                                  placeholder="Write your article here..."
+                                  value={l.content ?? ""}
+                                  onChange={(e) =>
+                                    updateLesson(s.id, l.id, {
+                                      content: e.target.value,
+                                    })
+                                  }
+                                />
+                              </Field>
+                            )}
+
+                            <Field className="space-y-2">
+                              <FieldLabel htmlFor="description">
+                                Lesson Description (optional)
+                              </FieldLabel>
+
+                              <Textarea
+                                id="description"
+                                className="w-full min-h-20 rounded-md border border-border bg-background p-3 text-sm resize-none"
+                                placeholder="Write your article..."
+                                value={l.description ?? ""}
+                                onChange={(e) =>
+                                  updateLesson(s.id, l.id, {
+                                    description: e.target.value,
+                                  })
+                                }
+                              />
+                            </Field>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

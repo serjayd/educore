@@ -20,7 +20,7 @@ export const courseDetailsSchema = z.object({
 
   description: z.string().optional(),
 
-  banner: z.string().optional(),
+  banner: z.instanceof(File).optional(),
 
   category: categorySchema,
 
@@ -71,6 +71,8 @@ export const publishCourseSchema = z.object({
   level: z.string().min(1, "Level is required"),
 
   price: z.number().min(0),
+
+  banner: z.instanceof(File).optional(),
 
   curriculum: z.object({
     sections: z

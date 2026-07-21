@@ -18,7 +18,16 @@ type CreateCourseStore = {
 
   addLessonArticle: (sectionId: string) => void;
 
-  updateLesson: (sectionId: string, lessonId: string, title: string) => void;
+  updateLesson: (
+    sectionId: string,
+    lessonId: string,
+    data: Partial<{
+      title: string;
+      videoUrl: string;
+      content: string;
+      description: string;
+    }>,
+  ) => void;
 
   removeLesson: (sectionId: string, lessonId: string) => void;
 
@@ -30,7 +39,7 @@ const initialDetails: CourseDetailsInput = {
 
   description: "",
 
-  banner: "",
+  banner: undefined,
 
   category: "WEB_DEVELOPMENT",
 
@@ -168,20 +177,18 @@ export const useCreateCourseStore = create<CreateCourseStore>((set) => ({
 
   // UPDATE LESSON TITLE
 
-  updateLesson: (sectionId, lessonId, title) =>
+  updateLesson: (sectionId, lessonId, data) =>
     set((state) => ({
       curriculum: {
         sections: state.curriculum.sections.map((section) =>
           section.id === sectionId
             ? {
                 ...section,
-
                 lessons: section.lessons.map((lesson) =>
                   lesson.id === lessonId
                     ? {
                         ...lesson,
-
-                        title,
+                        ...data,
                       }
                     : lesson,
                 ),
@@ -217,7 +224,7 @@ export const useCreateCourseStore = create<CreateCourseStore>((set) => ({
         category: "WEB_DEVELOPMENT",
         level: "BEGINNER",
         price: 0,
-        banner: "",
+        banner: undefined,
       },
 
       curriculum: {
